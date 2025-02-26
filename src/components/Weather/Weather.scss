@@ -1,0 +1,109 @@
+.weather-app {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.weather-form {
+    display: flex;
+
+    padding: 0.85rem 0.85rem;
+    border-radius: 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(16px);
+    max-width: 28rem;
+
+    input {
+        color: #fff;
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.373);
+        }
+    }
+
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .weather-button {
+        padding: 0.3rem 0.7rem;
+        border-radius: 3rem;
+        background: rgb(255, 255, 255);
+        backdrop-filter: blur(16px);
+    }
+}
+
+.weather-interface {
+    padding: 3rem 1.5rem;
+    border-radius: 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(16px);
+    max-height: 32rem;
+    max-width: 28rem;
+
+    .weather-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    
+    .weather-img {
+        width: 4.75rem;
+        // height: 4.75rem;
+    }
+    
+    .location {
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: normal;
+    }
+    
+    .date {
+        font-size: 0.85rem;
+        font-weight: 300;
+        line-height: normal;
+    }
+}
+
+.weather-temperature {
+    margin-top: 1.75rem;
+    font-size: 5rem;
+    text-align: center;
+    line-height: 1;
+
+    .current-temperature {
+        font-weight: 300;
+        position: relative;
+
+        &::after {
+            content: '°C';
+            font-family: sans-serif;
+            font-size: 1rem;
+            font-weight: 300;
+            position: absolute;
+            top: 0.85rem;
+        }
+    }
+
+    .weather-details {
+        font-size: 0.85rem;
+        font-weight: 300;
+    }
+}
+
+.weather-stats {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    .stats-column {
+        display: flex;
+        flex-direction: column;
+        max-width: 7.8rem;
+        width: 100%;
+        gap: 0.8rem;
+    }
+}

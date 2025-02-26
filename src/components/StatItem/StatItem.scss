@@ -1,0 +1,14 @@
+.stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 300;
+    font-size: 0.85rem;
+
+    .stat-main {
+        display: flex;
+        gap: 0.1rem;
+        align-items: center;
+    }
+
+}
