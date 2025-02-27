@@ -2,46 +2,51 @@
 import './Weather.scss';
 import { useState, useEffect } from 'react';
 
-//components
+//components & functions
 import StatItem from '../StatItem/StatItem';
+import { getWeatherImage } from '../WeatherUtils/WeatherUtils';
 
 // images
-import sunnyImg from '../../assets/sunny.png';
-import cloudyImg from '../../assets/cloudy.png';
-import rainyImg from '../../assets/rain.png';
-import snowyImg from '../../assets/snow.png';
-import drizzleImg from '../../assets/drizzle.png';
-import mistyImg from '../../assets/mist.png';
 import searchImg from '../../assets/search.svg';
+import loadingImg from '../../assets/refresh.svg';
 
 function Weather() {
-    const [ city, setCity ] = useState('Israel');
+    // states
+    const [ city, setCity ] = useState('Kyiv');
+    const [ inputValue, setInputValue ] = useState('');
     const [ weather, setWeather ] = useState({});
-    const [ statistics, setStatistics ] = useState({});
+    const [ loading, setLoading ] = useState(false);
+    const [ suggestions, setSuggestions ] = useState([]);
+
+    // API KEY
     const apiKey = 'e672897f38e611f2e3a354e5021fa94c';
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+    // date
+    const date = new Date();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weatherDate = `${days[date.getDay()]} ${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}/${date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()}/${date.getFullYear()}`;
 
     // functions
-    function getWeatherImage(weatherMain) {
-        switch(weatherMain) {
-            case 'Clear':
-                return sunnyImg;
-            case 'Clouds':
-                return cloudyImg;
-            case 'Rain':
-                return rainyImg;
-            case 'Snow':
-                return snowyImg;
-            case 'Drizzle':
-                return drizzleImg;
-            case 'Mist':
-                return mistyImg;
-            default:
-                return sunnyImg;
+    function handleInputChange(e) {
+        setInputValue(e.target.value);
+    }
+
+    function setCityName(e) {
+        e.preventDefault();
+
+        if (!inputValue.trim()) {
+            alert("Enter the city name!");
+            return;
         }
+
+        setCity(inputValue);
+        setInputValue('');
+        setSuggestions([]);
     }
 
     async function getWeather() {
+        setLoading(true);
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
         console.log(data);
@@ -59,33 +64,84 @@ function Weather() {
                 wind: data.wind.speed,
                 weatherMain: data.weather[0].main,
                 weatherDescription: data.weather[0].description, 
+                cityName: data.name,
+                countryCode: data.sys.country,
             });
         } catch(error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
+    //hooks
     useEffect(() => {
+        if (!city) return;
         getWeather();
     }, [city]);
+
+    useEffect(() => {
+        if (inputValue.length < 2) {
+            setSuggestions([]);  // hide suggestions if input is less than 2 characters
+            return;
+        }
+
+        const fetchSuggestins = async() => {
+            const url = `https://api.openweathermap.org/geo/1.0/direct?q=${inputValue}&limit=5&appid=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data && data.length > 0) {
+                setSuggestions(data); // store suggestions only if there are valid results
+            } else {
+                setSuggestions([]); // clear suggestions if no valid results
+            }
+        }
+
+        fetchSuggestins();
+    }, [inputValue])
 
     return (
         <div className="container">
             <div className="weather-app">
                 <form className='weather-form'>
-                    <input placeholder='Search by city or country' type="text" className="weather-input" />
-                    <button className='weather-button'>
+                    <input value={inputValue} placeholder='Search by city or country'  
+                    type="text" className="weather-input" onChange={handleInputChange} />
+                    <button onClick={setCityName} className='weather-button'>
                         <img src={searchImg} alt="Search" />
                     </button>
                 </form>
 
+                {inputValue.length > 1 && suggestions.length > 0 && (
+                    <ul className="suggestions-list">
+                        {suggestions.map((suggestion, index) => (
+                            <li
+                                key={index}
+                                onClick={() => {
+                                    setCity(`${suggestion.name}, ${suggestion.country}`);
+                                    setInputValue(''); // clear input field
+                                    setSuggestions([]); // clear suggestions
+                                    getWeather(); // immediately fetch the weather data for the selected city
+                                }}
+                            >
+                                {suggestion.name}, {suggestion.country}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
                 <div className="weather-interface">
-                    <div className="weather-info">
+                    {loading ? (
+                        <div className="loading-container">
+                            <img src={loadingImg} alt="" className="loading-icon" />
+                        </div>
+                    ) : (
+                        <>
+                        <div className="weather-info">
                         <img src={getWeatherImage(weather.weatherMain)} alt="Current Weather" className="weather-img" />
 
                         <div className="weather-text">
-                            <h1 className="location">Valle de Angeles, HN</h1>
-                            <p className="date">Monday 01/17/2022</p>
+                            <h1 className="location">{`${weather.cityName}, ${weather.countryCode}`}</h1>
+                            <p className="date">{weatherDate}</p>
                         </div>
                     </div>
 
@@ -104,7 +160,8 @@ function Weather() {
                             <StatItem value={Math.round(weather.feelsLike)} name={'Feels like'} />
                             <StatItem value={weather.wind} name={'Wind'} />
                         </div>
-                    </div>
+                    </div></>
+                    )}
                 </div>
             </div>
         </div>
