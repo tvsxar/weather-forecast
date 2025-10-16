@@ -2,7 +2,7 @@
 
 A weather application built with **React** and **Express.js** that provides real-time weather information, city search suggestions, and server-side caching for faster responses.
 
-📋 **Table of Contents**
+**Table of Contents**
 - [Description](#description)
 - [Live Demo](#live-demo)
 - [Features](#features)
@@ -27,7 +27,7 @@ The backend handles API requests to OpenWeatherMap and caches results for 10 min
 ---
 
 ## Live Demo
-Try it online via your hosted environment or locally.
+Try it online via our [Live Demo](https://weather-forecast-frontend-3w4a.onrender.com).
 
 ---
 
