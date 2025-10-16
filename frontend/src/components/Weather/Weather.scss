@@ -8,7 +8,7 @@
     display: flex;
 
     padding: 0.85rem 0.85rem;
-    border-radius: 3rem;
+    border-radius: 1rem;
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(16px);
     max-width: 28rem;
@@ -29,7 +29,7 @@
 
     .weather-button {
         padding: 0.3rem 0.7rem;
-        border-radius: 3rem;
+        border-radius: 0.5rem;
         background: rgb(255, 255, 255);
         backdrop-filter: blur(16px);
     }
@@ -41,7 +41,7 @@
     padding: 0.85rem 0.65rem;
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(16px);
-    border-radius: 3rem;
+    border-radius: 1rem;
 
     scrollbar-width: none;
 
@@ -60,7 +60,7 @@
 
 .weather-interface {
     padding: 3rem 1.5rem;
-    border-radius: 3rem;
+    border-radius: 1rem;
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(16px);
     max-height: 32rem;
